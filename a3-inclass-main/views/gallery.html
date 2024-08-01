@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fetch Gallery</title>
+</head>
+<body>
+  <h1>Fetch Gallery</h1>
+  <button onclick="fetchRandomFiles()">Fetch Gallery</button>
+  <div id="imageContainer"></div>
+  <script>
+    function fetchRandomFiles() {
+      fetch(`/fetch/all`)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          const imageContainer = document.getElementById('imageContainer');
+          imageContainer.innerHTML = ''; // Clear any existing content
+          if (Array.isArray(data) && data.length > 0) {
+            data.forEach((image) => {
+              if (image.imageBuffer) {
+                // Create an img element
+                const imgElement = document.createElement('img');
+                imgElement.src = `data:${image.contentType};base64,${image.imageBuffer}`;
+                imgElement.alt = image.filename;
+                imgElement.style.maxWidth = '200px';
+                imgElement.style.margin = '10px';
+
+                // Append the img element to the container
+                imageContainer.appendChild(imgElement);
+              }
+            });
+          } else {
+            imageContainer.innerHTML = '<p>No images found.</p>';
+          }
+        })
+        .catch((error) => console.error("Error fetching files:", error));
+    }
+  </script>
+</body>
+</html>
