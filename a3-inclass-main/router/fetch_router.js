@@ -63,7 +63,7 @@ router.get("/all/pages/:index", (req, res) => {
     return res.status(400).send("Invalid page index.");
   }
   const ITEMS_PER_PAGE = 10;
-  Image.find({}, { imageBuffer: 0 })
+  Image.find()
     .skip((pageIndex - 1) * ITEMS_PER_PAGE)
     .limit(ITEMS_PER_PAGE)
     .then((page_results) => {
